@@ -308,11 +308,13 @@ func (c *Call) String() string {
 	return fmt.Sprintf("Call(Args=%s Kwargs=%s Line=%d Col=%d)", c.Args, c.Kwargs, t.Line, t.Col)
 }
 
+// Getitem ...
 type Getitem struct {
 	Location *tokens.Token
 	Node     Node
 	Arg      string
 	Index    int
+	ArgNode  Node
 }
 
 func (g *Getitem) Position() *tokens.Token { return g.Location }
