@@ -271,10 +271,10 @@ func (p *Parser) ParseVariable() (nodes.Expression, error) {
 			continue
 		} else if bracket := p.Match(tokens.Lbracket); bracket != nil {
 			getitem := &nodes.Getitem{
-				Location: dot,
+				Location: bracket,
 				Node:     variable,
 			}
-			tok := p.Match(tokens.String, tokens.Integer)
+			tok := p.Match(tokens.String, tokens.Integer, tokens.Name)
 			switch tok.Type {
 			case tokens.String:
 				getitem.Arg = tok.Val
@@ -284,6 +284,8 @@ func (p *Parser) ParseVariable() (nodes.Expression, error) {
 					return nil, p.Error(err.Error(), tok)
 				}
 				getitem.Index = i
+			case tokens.Name:
+				getitem.ArgNode = &nodes.Name{Name: tok}
 			default:
 				return nil, p.Error("This token is not allowed within a variable name.", p.Current())
 			}

@@ -817,6 +817,16 @@ func (v *Value) Getitem(key interface{}) (*Value, bool) {
 				// In Django, exceeding the length of a list is just empty.
 				return AsValue(nil), false
 			}
+		case reflect.Struct:
+			if val.Type() == TypeDict {
+				for i, pair := range val.Interface().(Dict).Pairs {
+					if i == t {
+						return pair.Value, true
+					}
+				}
+			} else {
+				return AsValue(nil), false
+			}
 		default:
 			return AsValue(errors.Errorf("Can't access an index on type %s (variable %s)", val.Kind().String(), v)), false
 		}
